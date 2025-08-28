@@ -1,9 +1,14 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import connectDB from "./configs/db.js";
+import userRouter from "./routes/userRoutes.js";
 
 // initialize express app
 const app = express();
+
+// connect DB
+await connectDB()
 
 // middleware
 app.use(cors());
@@ -11,6 +16,10 @@ app.use(express.json());
 
 app.get('/',(req, res)=> res.send("Server is running"))
 
+app.use('/api/user',userRouter)
+
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=> console.log(`Server running on port ${PORT}`))
+app.listen(3000, () => {
+  console.log("🚀 Server is running on http://localhost:3000");
+});
