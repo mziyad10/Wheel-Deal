@@ -117,7 +117,7 @@ export const dummyCarData = [
         "model": "M5",
         "image": car_image1,
         "year": 2006,
-        "category": "SUV",
+        "category": "Sedan",
         "seating_capacity": 4,
         "fuel_type": "Petrol",
         "transmission": "Semi-Automatic",
