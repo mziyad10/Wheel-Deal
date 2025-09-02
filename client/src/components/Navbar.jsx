@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { assets, menuLinks } from "../assets/assets.js";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/useAppContext.js";
 import toast from "react-hot-toast";
 
 const Navbar = () => {

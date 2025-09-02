@@ -1,11 +1,12 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
-export const AppContext = createContext();
+export const AppContext = createContext(null);
+
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const currency = import.meta.env.VITE_CURRENCY;
@@ -16,10 +17,8 @@ export const AppProvider = ({ children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-
   const [cars, setCars] = useState([]);
 
-  // Function to check if user is logged in
   const fetchUser = async () => {
     try {
       const { data } = await axios.get("/api/user/data");
@@ -34,7 +33,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Function to log out the user
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
@@ -44,7 +42,6 @@ export const AppProvider = ({ children }) => {
     toast.success("You have been logged out");
   };
 
-  // Function to fetch all cars from the server
   const fetchCars = async () => {
     try {
       const { data } = await axios.get("/api/user/cars");
@@ -54,21 +51,24 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // useEffect to retrieve the token from localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      axios.defaults.headers.common["Authorization"] = storedToken;
+      fetchUser();
+    }
     fetchCars();
   }, []);
 
-  // useEffect to fetch user data when token is available
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `${token}`;
+      axios.defaults.headers.common["Authorization"] = token;
+      fetchUser();
     }
   }, [token]);
 
-  const value = {
+  const contextValue = {
     navigate,
     currency,
     axios,
@@ -91,8 +91,9 @@ export const AppProvider = ({ children }) => {
     setReturnDate
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-};
-export const useAppContext = () => {
-  return useContext(AppContext);
+  return (
+    <AppContext.Provider value={contextValue}>
+      {children}
+    </AppContext.Provider>
+  );
 };
