@@ -2,7 +2,7 @@ import Booking from "../models/Booking.js";
 import Car from "../models/Car.js";
 
 // function to check availability of car for a given date
-const checkAvailability = async (Car, pickupDate, returnDate) => {
+const checkAvailability = async (car, pickupDate, returnDate) => {
   const bookings = await Booking.find({
     car,
     pickupDate: { $lte: returnDate },
@@ -64,9 +64,10 @@ export const createBooking = async (req, res) => {
       returnDate,
       price,
     });
+
     res.json({ success: true, message: "Booking Created" });
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message, "from here");
     res.json({ success: false, message: error.message });
   }
 };

@@ -68,7 +68,8 @@ export const toggleCarAvailability = async (req, res) => {
   try {
     const { _id } = req.user;
     const { carId } = req.body;
-    const car = await Car.findById({ carId });
+    
+    const car = await Car.findById(carId);
 
     //checking is car belongs to owner
     if (car.owner.toString() !== _id.toString()) {
@@ -89,15 +90,13 @@ export const deleteCar = async (req, res) => {
   try {
     const { _id } = req.user;
     const { carId } = req.body;
-    const car = await Car.findById({ carId });
+    const car = await Car.findById( carId );
 
     //checking is car belongs to owner
     if (car.owner.toString() !== _id.toString()) {
       return res.json({ success: false, message: "Unauthorized" });
     }
-    car.owner = null;
-    car.isAvailable = false;
-    await car.save();
+    await Car.findByIdAndDelete(carId)
 
     res.json({ success: true, message: "Car removed" });
   } catch (error) {

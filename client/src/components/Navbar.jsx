@@ -7,10 +7,7 @@ import toast from "react-hot-toast";
 const Navbar = () => {
 
   const {setShowLogin, user, logout, isOwner, axios, setIsOwner} = useAppContext()
-
-  console.log(user,"not showing");
-  
-  
+    
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
